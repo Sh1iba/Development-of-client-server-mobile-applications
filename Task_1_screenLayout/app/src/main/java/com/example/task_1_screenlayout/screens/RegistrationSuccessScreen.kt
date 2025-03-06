@@ -15,7 +15,9 @@ import androidx.compose.ui.unit.sp
 import com.example.task_1_screenlayout.ui.theme.SoraFontFamily
 import com.example.task_1_screenlayout.ui.theme.colorFoundationGrey
 import androidx.compose.foundation.layout.Box
+
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,41 +25,41 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import com.example.task_1_screenlayout.R
-import com.example.task_1_screenlayout.ui.theme.colorBackgroudWhite
 import com.example.task_1_screenlayout.ui.theme.colorDarkOrange
 import com.example.task_1_screenlayout.ui.theme.colorLightGrey
 import com.example.task_1_screenlayout.ui.theme.colorLightRecGrey
 
-class RegistrationScreen : ComponentActivity() {
+class RegistrationSuccessScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            registrationScreen() // Ваш основной Composable-компонент
+            registrationSuccessScreen() // Ваш основной Composable-компонент
         }
     }
 }
 
 @Composable
-fun registrationScreen() {
+fun registrationSuccessScreen() {
+    // Размытый фон
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorBackgroudWhite) // Белый фон
+            .blur(8.dp) // Размытие фона
     ) {
-
         Text(
             text = "Create Account",
             fontFamily = SoraFontFamily, // Шрифт Sora
@@ -147,7 +149,6 @@ fun registrationScreen() {
             fontWeight = FontWeight.W400, // Вес шрифта 400 (Regular)
             fontSize = 16.sp, // Размер шрифта 16px
             lineHeight = 24.sp,
-            textAlign = TextAlign.Center,
             color = colorFoundationGrey,
             modifier = Modifier
                 .width(80.dp)
@@ -247,10 +248,77 @@ fun registrationScreen() {
         )
 
     }
+
+    Box (
+        modifier = Modifier
+            .fillMaxSize()
+
+    ){
+        Image(
+            painter = painterResource(id = R.drawable.success), // Укажите ваш вектор
+            contentDescription = "Vector Image", // Описание для доступности
+            modifier = Modifier
+                .width(100.dp) // Ширина 100dp
+                .height(100.dp) // Высота 100dp
+                .offset(x = 140.dp, y = 330.dp), // Смещение (если нужно)
+        )
+
+        Button(
+            onClick = {  },
+            modifier = Modifier
+                .width(327.dp) // Ширина кнопки 327px
+                .height(56.dp) // Высота кнопки 56px
+                .offset(x = 24.dp, y = 523.dp), // Позиция кнопки (Left: 24px, Top: 489px)
+            shape = RoundedCornerShape(16.dp), // Закругленные углы с радиусом 16px
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorDarkOrange
+            )
+        ) {
+            Text(
+                text = "OK", // Текст на кнопке
+                fontFamily = SoraFontFamily, // Шрифт Sora
+                fontWeight = FontWeight.W600, // Вес шрифта 600 (SemiBold)
+                fontSize = 16.sp, // Размер шрифта 16px
+                lineHeight = 24.sp, // Высота строки 24px
+                color = Color.White, // Цвет текста #FFFFFF
+                modifier = Modifier
+                    .width(30.dp)
+                    .height(24.dp)// Отступы внутри кнопки
+            )
+        }
+        Text(
+            text = "Congratulations!",
+            fontFamily = SoraFontFamily, // Шрифт Sora
+            fontWeight = FontWeight.W600, // Вес шрифта 400 (Regular)
+            fontSize = 20.sp, // Размер шрифта 16px
+            lineHeight = 24.sp,
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .width(175.dp)
+                .height(24.dp)
+                .offset(x = 95.dp,y = 440.dp)
+        )
+        Text(
+            text = "Registration was successful.",
+            fontFamily = SoraFontFamily, // Шрифт Sora
+            fontWeight = FontWeight.W400, // Вес шрифта 400 (Regular)
+            fontSize = 16.sp, // Размер шрифта 16px
+            lineHeight = 19.2.sp,
+            color = Color.Black,
+
+            modifier = Modifier
+                .width(249.dp)
+                .height(19.dp)
+                .offset(x = 70.dp,y = 470.dp)
+        )
+
+    }
+
 }
 
 @Preview(showBackground = true, showSystemUi = true, name = "pre")
 @Composable
-fun RegistrationScreenPreview() {
-    registrationScreen()
+fun RegistrationSuccessScreenPreview() {
+    registrationSuccessScreen()
 }
