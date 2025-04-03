@@ -1,4 +1,4 @@
-package com.example.task_1_screenlayout.screens
+package com.example.coffeeshop.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,8 +12,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.task_1_screenlayout.ui.theme.SoraFontFamily
-import com.example.task_1_screenlayout.ui.theme.colorFoundationGrey
+import com.example.coffeeshop.ui.theme.SoraFontFamily
+import com.example.coffeeshop.ui.theme.colorFoundationGrey
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,11 +23,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -35,17 +33,17 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import com.example.task_1_screenlayout.R
-import com.example.task_1_screenlayout.ui.theme.colorBackgroudWhite
-import com.example.task_1_screenlayout.ui.theme.colorDarkOrange
-import com.example.task_1_screenlayout.ui.theme.colorLightGrey
-import com.example.task_1_screenlayout.ui.theme.colorLightRecGrey
+import com.example.coffeeshop.R
+import com.example.coffeeshop.ui.theme.colorBackgroudWhite
+import com.example.coffeeshop.ui.theme.colorDarkOrange
+import com.example.coffeeshop.ui.theme.colorLightGrey
+import com.example.coffeeshop.ui.theme.colorLightRecGrey
 
 class RegistrationScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            registrationScreen() // Ваш основной Composable-компонент
+            registrationScreen()
         }
     }
 }
@@ -55,7 +53,7 @@ fun registrationScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorBackgroudWhite) // Белый фон
+            .background(colorBackgroudWhite)
     ) {
 
         Text(
