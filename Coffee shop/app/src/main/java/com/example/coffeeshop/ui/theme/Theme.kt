@@ -11,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    background = colorBackgroudWhite, // фон
-    primary = colorFoundationGrey, //Цвет жирного текста
-    secondary = colorLightGrey, // серый текст
+    background = colorBackgroudGray, // фон
+    primary = colorFoundationWhite, //Цвет жирного текста
+    secondary = colorLightWhite, // серый текст
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 fun CoffeeShopTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
