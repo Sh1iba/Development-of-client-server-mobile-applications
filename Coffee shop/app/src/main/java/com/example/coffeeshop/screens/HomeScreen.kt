@@ -1,10 +1,13 @@
 package com.example.coffeeshop.screens
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,23 +36,30 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -64,6 +74,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.coffeeshop.R
+import com.example.coffeeshop.history_search.SearchHistoryManager
 import com.example.coffeeshop.network.model.CoffeeImageResponse
 import com.example.coffeeshop.network.repository.CoffeeRepository
 import com.example.coffeeshop.ui.theme.SoraFontFamily
@@ -71,6 +82,7 @@ import com.example.coffeeshop.ui.theme.colorBackgroudWhite
 import com.example.coffeeshop.ui.theme.colorDarkOrange
 import com.example.coffeeshop.ui.theme.colorGrey
 import com.example.coffeeshop.ui.theme.colorGreyWhite
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class HomeScreen : ComponentActivity() {
@@ -90,9 +102,21 @@ fun homeScreen(viewModel: HomeViewModel) {
             .fillMaxSize()
             .background(color = colorBackgroudWhite)
     ) {
-        secondHalfOfHomeScreen(viewModel)
-        firstHalfOfHomeScreen(viewModel)
 
+        secondHalfOfHomeScreen(viewModel)
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(280.dp)
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(Color(0xFF313131), Color(0xFF111111)),
+                        start = Offset(0f, Float.POSITIVE_INFINITY),
+                        end = Offset(Float.POSITIVE_INFINITY, 0f)
+                    )
+                )
+        )
         Image(
             painter = painterResource(id = R.drawable.banner),
             contentDescription = "banner Image",
@@ -102,6 +126,8 @@ fun homeScreen(viewModel: HomeViewModel) {
                 .offset(x = 24.dp, y = 211.dp),
             contentScale = ContentScale.Crop
         )
+        firstHalfOfHomeScreen(viewModel)
+
     }
 }
 
@@ -130,209 +156,301 @@ fun secondHalfOfHomeScreen(viewModel: HomeViewModel) {
     }
 }
 
-
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun firstHalfOfHomeScreen(viewModel: HomeViewModel) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(280.dp)
-            .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color(0xFF313131),
-                        Color(0xFF111111)
-                    ),
-                    start = androidx.compose.ui.geometry.Offset(
-                        0f,
-                        Float.POSITIVE_INFINITY
-                    ),
-                    end = androidx.compose.ui.geometry.Offset(
-                        Float.POSITIVE_INFINITY,
-                        0f
-                    )
-                )
-            )
+            .width(161.dp)
+            .height(43.dp)
+            .offset(x = 24.dp, y = 68.dp)
     ) {
-        Box(
+        Column(
             modifier = Modifier
-                .width(161.dp)
-                .height(43.dp)
-                .offset(x = 24.dp, y = 68.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
+            Text(
+                text = "Location",
+                fontFamily = SoraFontFamily,
+                fontWeight = FontWeight.W400,
+                fontSize = 12.sp,
+                lineHeight = 14.4.sp,
+                color = colorGrey,
                 modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    .width(55.dp)
+                    .height(14.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .width(176.dp)
+                    .height(21.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Location",
+                    text = "Bilzen, Tanjungbalai",
                     fontFamily = SoraFontFamily,
-                    fontWeight = FontWeight.W400,
-                    fontSize = 12.sp,
-                    lineHeight = 14.4.sp,
-                    color = colorGrey,
-                    modifier = Modifier
-                        .width(55.dp)
-                        .height(14.dp)
+                    fontWeight = FontWeight.W600,
+                    fontSize = 14.sp,
+                    lineHeight = 21.sp,
+                    color = colorGreyWhite,
+                    modifier = Modifier.weight(1f)
                 )
 
+                Image(
+                    painter = painterResource(id = R.drawable.img),
+                    contentDescription = "Custom Icon",
+                    modifier = Modifier
+                        .width(14.dp)
+                        .height(14.dp)
+                )
+            }
+        }
+    }
+    val context = LocalContext.current
+    val searchHistoryManager = remember { SearchHistoryManager(context) }
+    var searchText by rememberSaveable { mutableStateOf("") }
+    var isFocused by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    var searchHistory by remember { mutableStateOf(searchHistoryManager.getSearchHistory()) }
+    val focusManager = LocalFocusManager.current
+
+    // Track last time of user action
+    val lastActionTime = remember { mutableStateOf(System.currentTimeMillis()) }
+    // Функция для обновления истории
+    fun updateHistory() {
+        searchHistory = searchHistoryManager.getSearchHistory()
+    }
+    // Timer that triggers after 2 seconds of inactivity
+    LaunchedEffect(searchText) {
+        val currentTime = System.currentTimeMillis()
+        lastActionTime.value = currentTime
+        delay(2000) // Wait for 2 seconds
+
+        if (System.currentTimeMillis() - lastActionTime.value >= 2000 && searchText.isNotBlank()) {
+            // After 2 seconds of inactivity, initiate search if text is not empty
+            searchHistoryManager.addSearchQuery(searchText)
+            updateHistory() // Update search history
+            viewModel.fetchCoffeeImage(searchText)
+        }
+    }
+
+
+
+    Column(
+        modifier = Modifier
+            .width(327.dp)
+            .offset(x = 24.dp, y = 135.dp)
+    ) {
+        // Search Row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Search Field
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(52.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Color(0xFF2C2C2C), Color(0xFF2A2A2A))
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = if (isFocused) colorDarkOrange else Color.Transparent,
+                        shape = RoundedCornerShape(12.dp)
+                    )
+            ) {
                 Row(
                     modifier = Modifier
-                        .width(176.dp)
-                        .height(21.dp),
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "Bilzen, Tanjungbalai",
-                        fontFamily = SoraFontFamily,
-                        fontWeight = FontWeight.W600,
-                        fontSize = 14.sp,
-                        lineHeight = 21.sp,
-                        color = colorGreyWhite,
-                        modifier = Modifier.weight(1f)
+                    Image(
+                        painter = painterResource(id = R.drawable.search),
+                        contentDescription = "Search",
+                        modifier = Modifier.size(18.dp)
                     )
 
-                    Image(
-                        painter = painterResource(id = R.drawable.img),
-                        contentDescription = "Custom Icon",
+                    BasicTextField(
+                        value = searchText,
+                        onValueChange = {
+                            searchText = it
+                            lastActionTime.value = System.currentTimeMillis() // Update the last action time
+                            if (it.isEmpty()) updateHistory()
+                        },
+                        textStyle = TextStyle(
+                            fontSize = 16.sp,
+                            color = Color.White
+                        ),
+                        singleLine = true,
                         modifier = Modifier
-                            .width(14.dp)
-                            .height(14.dp)
+                            .weight(1f)
+                            .padding(horizontal = 8.dp)
+                            .onFocusChanged { focusState ->
+                                isFocused = focusState.isFocused
+                                if (focusState.isFocused && searchText.isEmpty()) {
+                                    updateHistory()
+                                }
+                            },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(
+                            onSearch = {
+                                if (searchText.isNotBlank()) {
+                                    searchHistoryManager.addSearchQuery(searchText)
+                                    updateHistory() // Явное обновление после добавления
+                                    viewModel.fetchCoffeeImage(searchText)
+                                    keyboardController?.hide()
+                                    focusManager.clearFocus()
+                                    isFocused = false
+                                }
+                            }
+                        ),
+                        decorationBox = { innerTextField ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Box(modifier = Modifier.weight(1f)) {
+                                    if (searchText.isEmpty()) {
+                                        Text(
+                                            text = "Search coffee",
+                                            fontSize = 16.sp,
+                                            color = Color.Gray
+                                        )
+                                    }
+                                    innerTextField()
+                                }
+
+                                if (searchText.isNotEmpty()) {
+                                    IconButton(
+                                        onClick = {
+                                            searchText = ""
+                                            keyboardController?.hide()
+                                            updateHistory()
+                                        },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Close,
+                                            contentDescription = "Clear",
+                                            tint = Color.Gray
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    )
+                }
+            }
+
+            // Search Button
+            Box(
+                modifier = Modifier
+                    .size(52.dp)
+                    .background(colorDarkOrange, RoundedCornerShape(12.dp))
+                    .clickable {
+                        if (searchText.isNotBlank()) {
+                            searchHistoryManager.addSearchQuery(searchText)
+                            updateHistory() // Явное обновление после добавления
+                            viewModel.fetchCoffeeImage(searchText)
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            isFocused = false
+                        }
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                if (viewModel.isLoading.value) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.search),
+                        contentDescription = "Search",
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }
         }
 
-        var searchText by rememberSaveable { mutableStateOf("") }
-        val keyboardController = LocalSoftwareKeyboardController.current
-
-        Box(
-            modifier = Modifier
-                .width(327.dp)
-                .height(52.dp)
-                .offset(x = 24.dp, y = 135.dp)
-                .zIndex(1f)
-        ) {
-            Row(
+        // Search History Panel
+        if (isFocused && searchText.isEmpty()) {
+            Surface(
                 modifier = Modifier
-                    .fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                shape = RoundedCornerShape(12.dp),
+                color = Color(0xFF2C2C2C),
+                tonalElevation = 4.dp
             ) {
-                Surface(
-                    modifier = Modifier
-                        .width(259.dp)
-                        .height(52.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color.Transparent
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color(0xFF2C2C2C),
-                                        Color(0xFF2A2A2A)
-                                    )
-                                )
-                            )
-                    ) {
+                Column {
+                    if (searchHistory.isNotEmpty()) {
+                        // Clear History Button
                         Row(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.search),
-                                contentDescription = "Search Image",
-                                modifier = Modifier
-                                    .width(16.89.dp)
-                                    .height(17.27.dp),
-                            )
-
-                            BasicTextField(
-                                value = searchText,
-                                onValueChange = { searchText = it },
-                                textStyle = TextStyle(
-                                    fontSize = 16.sp,
-                                    color = Color.White
-                                ),
-                                singleLine = true,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(horizontal = 8.dp),
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                                keyboardActions = KeyboardActions(
-                                    onSearch = {
-                                        viewModel.fetchCoffeeImage(searchText)
-                                        keyboardController?.hide()
-                                    }
-                                ),
-                                decorationBox = { innerTextField ->
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        Box(modifier = Modifier.weight(1f)) {
-                                            if (searchText.isEmpty()) {
-                                                Text(
-                                                    text = "Search coffee",
-                                                    fontSize = 16.sp,
-                                                    color = Color.Gray
-                                                )
-                                            }
-                                            innerTextField()
-                                        }
-
-                                        if (searchText.isNotEmpty()) {
-                                            IconButton(
-                                                onClick = {
-                                                    searchText = ""
-                                                    keyboardController?.hide()
-                                                },
-                                                modifier = Modifier.size(24.dp)
-                                            ) {
-                                                Icon(
-                                                    imageVector = Icons.Default.Close,
-                                                    contentDescription = "Clear",
-                                                    tint = Color.Gray
-                                                )
-                                            }
-                                        }
-                                    }
+                                .fillMaxWidth()
+                                .clickable {
+                                    searchHistoryManager.clearSearchHistory()
+                                    updateHistory() // Явное обновление после очистки
                                 }
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            Text(
+                                text = "Clear history",
+                                color = Color.Gray,
+                                fontSize = 14.sp
                             )
                         }
-                    }
-                }
 
-                Box(
-                    modifier = Modifier
-                        .size(52.dp)
-                        .background(
-                            color = colorDarkOrange,
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .clickable {
-                            viewModel.fetchCoffeeImage(searchText)
-                            keyboardController?.hide()
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (viewModel.isLoading.value) {
-                        CircularProgressIndicator(
-                            color = Color.White,
-                            modifier = Modifier.size(20.dp)
-                        )
+                        // History Items
+                        LazyColumn {
+                            items(searchHistory) { item ->
+                                Text(
+                                    text = item,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            searchText = item
+                                            searchHistoryManager.addSearchQuery(item) // Добавляем при выборе
+                                            updateHistory() // Обновляем историю
+                                            viewModel.fetchCoffeeImage(item)
+                                            keyboardController?.hide()
+                                            focusManager.clearFocus()
+                                            isFocused = false
+                                        }
+                                        .padding(12.dp),
+                                    color = Color.White,
+                                    fontSize = 16.sp
+                                )
+
+                                if (item != searchHistory.last()) {
+                                    Divider(
+                                        color = Color(0xFF3A3A3A),
+                                        thickness = 1.dp,
+                                        modifier = Modifier.padding(horizontal = 8.dp)
+                                    )
+                                }
+                            }
+                        }
                     } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.search),
-                            contentDescription = "Search",
-                            modifier = Modifier.size(20.dp)
+                        // Empty state
+                        Text(
+                            text = "No search history",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            color = Color.Gray,
+                            fontSize = 16.sp
                         )
                     }
                 }
