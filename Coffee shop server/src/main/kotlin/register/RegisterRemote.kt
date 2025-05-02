@@ -9,9 +9,17 @@ data class RegisterReceiveRemote(
     val email: String
 )
 
-val emailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"
-fun isValidEmail(email: String): Boolean {
-    return email.matches(emailRegex.toRegex())
+private const val EMAIL_REGEX = """[a-zA-Z0-9\+\.\_\%\-\+]{1,256}@[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}(\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,25})+"""
+
+fun String.isValidEmail(): Boolean {
+
+    if (this.isBlank()) return false
+    if (this.length > 254) return false
+    val pattern = Regex(EMAIL_REGEX)
+    if (!this.matches(pattern)) return false
+    if (this.substringAfterLast('@').contains("..")) return false
+    if (this.startsWith(".") || this.endsWith(".")) return false
+    return true
 }
 
 @Serializable
