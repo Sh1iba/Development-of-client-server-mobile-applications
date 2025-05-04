@@ -58,37 +58,37 @@ fun registrationScreen() {
 
         Text(
             text = "Create Account",
-            fontFamily = SoraFontFamily, // Шрифт Sora
-            fontWeight = FontWeight.W600, // Вес шрифта 600 (SemiBold)
-            fontSize = 20.sp, // Размер шрифта 20px
-            lineHeight = 24.sp, // Высота строки 24px
-            color = colorFoundationGrey, // Цвет текста #242424
-            textAlign = TextAlign.Center, // Выравнивание по центру
+            fontFamily = SoraFontFamily,
+            fontWeight = FontWeight.W600,
+            fontSize = 20.sp,
+            lineHeight = 24.sp,
+            color = colorFoundationGrey,
+            textAlign = TextAlign.Center,
             modifier = Modifier
-                .width(162.dp) // Ширина текста 162px
-                .height(24.dp) // Высота текста 24px
-                .offset(x = 107.dp, y = 163.dp) // Смещение текста
+                .width(162.dp)
+                .height(24.dp)
+                .offset(x = 107.dp, y = 163.dp)
         )
 
-        // Текст "Add information about yourself."
+
         Text(
             text = "Add information about yourself.",
-            fontFamily = SoraFontFamily, // Шрифт Sora
-            fontWeight = FontWeight.W400, // Вес шрифта 400 (Regular)
-            fontSize = 16.sp, // Размер шрифта 16px
-            lineHeight = 19.2.sp, // Высота строки 19.2px
-            color = colorLightGrey, // Цвет текста #9C9C9C
-            textAlign = TextAlign.Center, // Выравнивание по центру
+            fontFamily = SoraFontFamily,
+            fontWeight = FontWeight.W400,
+            fontSize = 16.sp,
+            lineHeight = 19.2.sp,
+            color = colorLightGrey,
+            textAlign = TextAlign.Center,
             modifier = Modifier
-                .width(300.dp) // Ширина текста 258px
-                .height(19.dp) // Высота текста 19px
-                .offset(x = 38.dp, y = 203.dp) // Смещение текста
+                .width(300.dp)
+                .height(19.dp)
+                .offset(x = 38.dp, y = 203.dp)
         )
 
         Text(
             text = "Name",
-            fontFamily = SoraFontFamily, // Шрифт Sora
-            fontWeight = FontWeight.W400, // Вес шрифта 400 (Regular)
+            fontFamily = SoraFontFamily,
+            fontWeight = FontWeight.W400,
             fontSize = 16.sp, // Размер шрифта 16px
             lineHeight = 24.sp,
             color = colorFoundationGrey,
