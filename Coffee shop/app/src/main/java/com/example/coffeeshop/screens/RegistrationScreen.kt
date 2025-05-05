@@ -1,8 +1,5 @@
 package com.example.coffeeshop.screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -33,23 +30,16 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.coffeeshop.R
 import com.example.coffeeshop.ui.theme.colorBackgroudWhite
 import com.example.coffeeshop.ui.theme.colorDarkOrange
 import com.example.coffeeshop.ui.theme.colorLightGrey
 import com.example.coffeeshop.ui.theme.colorLightRecGrey
 
-class RegistrationScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            registrationScreen()
-        }
-    }
-}
-
 @Composable
-fun registrationScreen() {
+fun RegistrationScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -250,5 +240,5 @@ fun registrationScreen() {
 @Preview(showBackground = true, showSystemUi = true, name = "pre")
 @Composable
 fun RegistrationScreenPreview() {
-    registrationScreen()
+    RegistrationScreen(navController = rememberNavController())
 }

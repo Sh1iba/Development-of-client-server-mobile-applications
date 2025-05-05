@@ -1,8 +1,6 @@
 package com.example.coffeeshop.screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,22 +29,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.coffeeshop.R
+import com.example.coffeeshop.navigation.NavigationRoutes
 import com.example.coffeeshop.ui.theme.SoraFontFamily
 import com.example.coffeeshop.ui.theme.colorDarkOrange
 import com.example.coffeeshop.ui.theme.colorGrey
 
-class OnboardingScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            onboardingScreen()
-        }
-    }
-}
-
 @Composable
-fun onboardingScreen() {
+fun OnBoardingScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -121,7 +113,11 @@ fun onboardingScreen() {
                 }
             }
             Button(
-                onClick = {  },
+                onClick = {
+                    navController.navigate(NavigationRoutes.REGISTRATION) {
+                        popUpTo(NavigationRoutes.ONBOARDING) { inclusive = true }
+                    }
+                },
                 modifier = Modifier
                     .width(327.dp)
                     .height(56.dp),
@@ -151,5 +147,5 @@ fun onboardingScreen() {
 @Preview(showBackground = true, showSystemUi = true, name = "pre")
 @Composable
 fun OnboardingScreenPreview() {
-    onboardingScreen()
+    OnBoardingScreen(navController = rememberNavController())
 }
