@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.coffeeshop.navigation.NavigationRoutes
 import com.example.coffeeshop.screens.OnBoardingScreen
 import com.example.coffeeshop.screens.RegistrationScreen
+import com.example.coffeeshop.screens.SignInScreenPreview
 import com.example.coffeeshop.ui.theme.CoffeeShopTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,6 +27,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(NavigationRoutes.REGISTRATION) {
                         RegistrationScreen(navController)
+                    }
+                    composable(NavigationRoutes.SIGN_IN) {
+                        SignInScreenPreview()
                     }
                 }
             }

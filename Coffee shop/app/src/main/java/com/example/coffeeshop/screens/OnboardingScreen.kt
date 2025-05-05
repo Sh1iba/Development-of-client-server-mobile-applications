@@ -1,6 +1,5 @@
 package com.example.coffeeshop.screens
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +38,7 @@ import com.example.coffeeshop.ui.theme.colorGrey
 
 @Composable
 fun OnBoardingScreen(navController: NavController) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()

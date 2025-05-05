@@ -18,16 +18,27 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.navigation.NavController
@@ -47,7 +58,7 @@ fun RegistrationScreen(navController: NavController) {
     ) {
 
         Text(
-            text = "Create Account",
+            text = "Создать Аккаунт",
             fontFamily = SoraFontFamily,
             fontWeight = FontWeight.W600,
             fontSize = 20.sp,
@@ -62,7 +73,7 @@ fun RegistrationScreen(navController: NavController) {
 
 
         Text(
-            text = "Add information about yourself.",
+            text = "Добавьте информацию о себе.",
             fontFamily = SoraFontFamily,
             fontWeight = FontWeight.W400,
             fontSize = 16.sp,
@@ -74,166 +85,224 @@ fun RegistrationScreen(navController: NavController) {
                 .height(19.dp)
                 .offset(x = 38.dp, y = 203.dp)
         )
+        var name by remember { mutableStateOf("") }
+        var email by remember { mutableStateOf("") }
+        var password by remember { mutableStateOf("") }
+        var passwordVisible by remember { mutableStateOf(false) }
 
         Text(
-            text = "Name",
+            text = "Имя",
             fontFamily = SoraFontFamily,
             fontWeight = FontWeight.W400,
-            fontSize = 16.sp, // Размер шрифта 16px
+            fontSize = 16.sp,
             lineHeight = 24.sp,
             color = colorFoundationGrey,
             modifier = Modifier
-                .width(49.dp) // Ширина текста 299px
-                .height(24.dp) // Высота текста 19px
+                .width(49.dp)
+                .height(24.dp)
                 .offset(x = 24.dp, y = 267.dp)
         )
 
-        Column(
+        Box(
             modifier = Modifier
-                .padding(start = 22.dp, top = 291.dp) // Отступы слева и сверху
+                .padding(start = 22.dp, top = 291.dp,end = 22.dp)
+                .fillMaxWidth()
+                .height(40.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(colorLightRecGrey),
+            contentAlignment = Alignment.CenterStart
         ) {
-            Box(
+            BasicTextField(
+                value = name,
+                onValueChange = { name = it },
                 modifier = Modifier
-                    .width(330.dp) // Ширина прямоугольника 330px
-                    .height(40.dp) // Высота прямоугольника 40px
-                    .clip(RoundedCornerShape(10.dp)) // Закругленные углы с радиусом 10px
-                    .background(colorLightRecGrey) // Цвет прямоугольника #EDEDED
-
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
+                textStyle = LocalTextStyle.current.copy(
+                    fontSize = 16.sp,
+                    lineHeight = 16.sp
+                ),
+                singleLine = true
             )
+
         }
 
         Text(
-            text = "Email",
-            fontFamily = SoraFontFamily, // Шрифт Sora
-            fontWeight = FontWeight.W400, // Вес шрифта 400 (Regular)
-            fontSize = 16.sp, // Размер шрифта 16px
+            text = "Почта",
+            fontFamily = SoraFontFamily,
+            fontWeight = FontWeight.W400,
+            fontSize = 16.sp,
             lineHeight = 24.sp,
             color = colorFoundationGrey,
             modifier = Modifier
-                .width(44.dp) // Ширина текста 299px
-                .height(24.dp) // Высота текста 19px
+                .width(48.dp)
+                .height(24.dp)
                 .offset(x = 24.dp, y = 336.dp)
         )
 
-        Column(
+        Box(
             modifier = Modifier
-                .padding(start = 22.dp, top = 360.dp) // Отступы слева и сверху
+                .padding(start = 22.dp, top = 360.dp,end = 22.dp)
+                .fillMaxWidth()
+                .height(40.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(colorLightRecGrey),
+            contentAlignment = Alignment.CenterStart
         ) {
-            Box(
+            BasicTextField(
+                value = email,
+                onValueChange = { email = it },
                 modifier = Modifier
-                    .width(330.dp) // Ширина прямоугольника 330px
-                    .height(40.dp) // Высота прямоугольника 40px
-                    .clip(RoundedCornerShape(10.dp)) // Закругленные углы с радиусом 10px
-                    .background(colorLightRecGrey) // Цвет прямоугольника #EDEDED
-
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
+                textStyle = LocalTextStyle.current.copy(
+                    fontSize = 16.sp,
+                    lineHeight = 16.sp
+                ),
+                singleLine = true
             )
         }
 
         Text(
-            text = "Password",
-            fontFamily = SoraFontFamily, // Шрифт Sora
-            fontWeight = FontWeight.W400, // Вес шрифта 400 (Regular)
-            fontSize = 16.sp, // Размер шрифта 16px
+            text = "Пароль",
+            fontFamily = SoraFontFamily,
+            fontWeight = FontWeight.W400,
+            fontSize = 16.sp,
             lineHeight = 24.sp,
             textAlign = TextAlign.Center,
             color = colorFoundationGrey,
             modifier = Modifier
-                .width(80.dp)
+                .width(56.dp)
                 .height(24.dp)
                 .offset(x = 24.dp, y = 403.dp)
         )
 
+        Box(
+            modifier = Modifier
+                .padding(start = 22.dp, top = 427.dp,end = 22.dp)
+                .fillMaxWidth()
+                .height(40.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(colorLightRecGrey),
+            contentAlignment = Alignment.CenterStart
+
+        ) {
+            BasicTextField(
+                value = password,
+                onValueChange = { password = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
+                textStyle = LocalTextStyle.current.copy(
+                    fontSize = 16.sp,
+                    lineHeight = 16.sp
+                ),
+                visualTransformation = if (passwordVisible)
+                    VisualTransformation.None
+                else
+                    PasswordVisualTransformation(),
+                singleLine = true
+            )
+
+            IconButton(
+                onClick = { passwordVisible = !passwordVisible },
+                modifier = Modifier
+                    .size(48.dp)
+                    .align(alignment = Alignment.CenterEnd)
+            ) {
+                Icon(
+                    painter = painterResource(
+                        id = if (passwordVisible)
+                            R.drawable.eye_on_foreground
+                        else
+                            R.drawable.eye_off_foreground
+                    ),
+                    contentDescription = if (passwordVisible)
+                        "Скрыть пароль"
+                    else
+                        "Показать пароль",
+                    tint = colorFoundationGrey
+                )
+            }
+
+
+        }
+
+
+
+        HorizontalDivider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 39.dp, top = 507.dp, end = 39.dp),
+            thickness = 1.dp,
+            color = Color(0xFFE3E3E3)
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 24.dp, top = 523.dp, end = 24.dp)
+        ) {
+            Button(
+                onClick = { /* действие */ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorDarkOrange
+                )
+            ) {
+                Text(
+                    text = "Зарегистрироваться",
+                    fontFamily = SoraFontFamily,
+                    fontWeight = FontWeight.W600,
+                    fontSize = 16.sp,
+                    lineHeight = 24.sp,
+                    color = Color.White
+                )
+            }
+        }
+
         Column(
-            modifier = Modifier
-                .padding(start = 24.dp, top = 427.dp) // Отступы слева и сверху
+            modifier = Modifier,
+            verticalArrangement = Arrangement.spacedBy(15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .width(330.dp) // Ширина прямоугольника 330px
-                    .height(40.dp) // Высота прямоугольника 40px
-                    .clip(RoundedCornerShape(10.dp)) // Закругленные углы с радиусом 10px
-                    .background(colorLightRecGrey) // Цвет прямоугольника #EDEDED
-            )
-        }
-
-        Image(
-            painter = painterResource(id = R.drawable.eye_off), // Иконка из drawable
-            contentDescription = "Eye Icon", // Описание для доступности
-            modifier = Modifier
-                .width(24.dp) // Ширина иконки 24px
-                .height(24.dp) // Высота иконки 24px
-                .offset(x = 322.dp, y = 434.dp) // Позиция иконки (Left: 320px, Top: 400px)
-        )
 
         HorizontalDivider(
             modifier = Modifier
-                .width(335.dp) // Ширина линии 295px (или на весь экран, если нужно)
-                .padding(start = 39.dp, top = 507.dp), // Позиция линии (Left: 39px, Top: 473px)
-            thickness = 1.dp, // Толщина линии 1px
-            color = Color(0xFFE3E3E3) // Цвет линии #E3E3E3
-        )
-
-        Button(
-            onClick = {  },
-            modifier = Modifier
-                .width(327.dp) // Ширина кнопки 327px
-                .height(56.dp) // Высота кнопки 56px
-                .offset(x = 24.dp, y = 523.dp), // Позиция кнопки (Left: 24px, Top: 489px)
-            shape = RoundedCornerShape(16.dp), // Закругленные углы с радиусом 16px
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorDarkOrange
-            )
-        ) {
-            Text(
-                text = "Sign Up", // Текст на кнопке
-                fontFamily = SoraFontFamily, // Шрифт Sora
-                fontWeight = FontWeight.W600, // Вес шрифта 600 (SemiBold)
-                fontSize = 16.sp, // Размер шрифта 16px
-                lineHeight = 24.sp, // Высота строки 24px
-                color = Color.White, // Цвет текста #FFFFFF
-                modifier = Modifier
-                    .width(65.dp)
-                    .height(24.dp)// Отступы внутри кнопки
-            )
-        }
-
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth() // Ширина линии 375px (или на весь экран, если нужно)
-                .padding(top = 710.dp), // Позиция линии (Top: 710px)
-            thickness = 4.dp, // Толщина линии 4px
+                .fillMaxWidth()
+                .padding(top = 710.dp),
+            thickness = 4.dp,
             color = Color(0xFFF9F2ED)
         )
 
-        Text(
-            text = buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        color = colorFoundationGrey // Цвет для "Don't have an account?"
-                    )
-                ) {
-                    append("Already have an account? ") // Обычный текст
-                }
-                withStyle(
-                    style = SpanStyle(
-                        color = colorDarkOrange, // Цвет для "Sign Up"
-                        textDecoration = TextDecoration.Underline // Подчеркивание
-                    )
-                ) {
-                    append("Sign In") // Подчеркнутый текст
-                }
-            },
-            fontFamily = SoraFontFamily, // Шрифт Sora
-            fontWeight = FontWeight.W400, // Вес шрифта 400 (Regular)
-            fontSize = 16.sp, // Размер шрифта 16px
-            lineHeight = 19.2.sp, // Высота строки 19.2px
-            textAlign = TextAlign.Center, // Выравнивание по центру
-            modifier = Modifier
-                .width(276.dp) // Ширина текста 256px
-                .height(19.dp) // Высота текста 19px
-                .offset(x = 54.dp, y = 735.dp) // Позиция текста (Left: 56px, Top: 735px)
-        )
-
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            color = colorFoundationGrey
+                        )
+                    ) {
+                        append("У вас уже есть учетная запись? ")
+                    }
+                    withStyle(
+                        style = SpanStyle(
+                            color = colorDarkOrange,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    ) {
+                        append("Войти")
+                    }
+                },
+                fontFamily = SoraFontFamily,
+                fontWeight = FontWeight.W400,
+                fontSize = 16.sp,
+                lineHeight = 19.2.sp,
+                textAlign = TextAlign.Center,
+            )
+            }
     }
 }
 
