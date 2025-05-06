@@ -31,7 +31,7 @@ class LoginController(private val call: ApplicationCall) {
                 call.respond(LoginResponseRemote(token = token))
             }
             else{
-                call.respond(HttpStatusCode.BadRequest,"Invalid password")
+                call.respond(HttpStatusCode.Conflict,"Invalid password")
             }
         }
     }

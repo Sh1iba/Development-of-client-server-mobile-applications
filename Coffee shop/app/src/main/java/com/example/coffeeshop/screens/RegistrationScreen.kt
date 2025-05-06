@@ -100,7 +100,7 @@ fun RegistrationScreen(navController: NavController) {
                 .height(19.dp)
                 .offset(x = 38.dp, y = 203.dp)
         )
-        var name by remember { mutableStateOf("") }
+        var login by remember { mutableStateOf("") }
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         var passwordVisible by remember { mutableStateOf(false) }
@@ -128,8 +128,8 @@ fun RegistrationScreen(navController: NavController) {
             contentAlignment = Alignment.CenterStart
         ) {
             BasicTextField(
-                value = name,
-                onValueChange = { name = it },
+                value = login,
+                onValueChange = { login = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp),
@@ -275,7 +275,7 @@ fun RegistrationScreen(navController: NavController) {
             Button(
                 onClick = {
 
-                    if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                    if (login.isEmpty() || email.isEmpty() || password.isEmpty()) {
                         errorMessage = "Все поля должны быть заполнены"
                         Log.d("Registration", "Все поля должны быть заполнены")
                         return@Button
@@ -289,7 +289,7 @@ fun RegistrationScreen(navController: NavController) {
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
                             Log.d("Registration", "Начало регистрации...")
-                            val result = registrationManager.registerUser(name, email, password)
+                            val result = registrationManager.registerUser(login, email, password)
 
                             withContext(Dispatchers.Main) {
                                 isLoading = false
@@ -378,6 +378,13 @@ fun RegistrationScreen(navController: NavController) {
                 fontSize = 16.sp,
                 lineHeight = 19.2.sp,
                 textAlign = TextAlign.Center,
+                modifier = Modifier.clickable {
+                    navController.navigate(NavigationRoutes.SIGN_IN) {
+                        popUpTo(NavigationRoutes.REGISTRATION) { inclusive = true }
+                    }
+                }
+                    
+
             )
 
 

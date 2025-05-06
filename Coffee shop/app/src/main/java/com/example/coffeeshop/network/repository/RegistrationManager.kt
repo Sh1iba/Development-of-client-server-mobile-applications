@@ -2,16 +2,16 @@ package com.example.coffeeshop.network.repository
 
 import android.util.Log
 import com.example.coffeeshop.network.api.ApiClient
-import com.example.coffeeshop.network.model.RegisterRequest
-import com.example.coffeeshop.network.model.RegisterResponse
+import com.example.coffeeshop.network.model.register.RegisterRequest
+import com.example.coffeeshop.network.model.register.RegisterResponse
 
 class RegistrationManager {
     private val apiService = ApiClient.coffeeApi
 
-    suspend fun registerUser( name: String, email: String, password: String): Result<RegisterResponse> {
+    suspend fun registerUser( login: String, email: String, password: String): Result<RegisterResponse> {
         return try {
-            Log.d("Registration", "Пытаемся зарегистрировать пользователя: $name")
-            val request = RegisterRequest(name, email, password)
+            Log.d("Registration", "Пытаемся зарегистрировать пользователя: $login")
+            val request = RegisterRequest(login, email, password)
             val response = apiService.registerUser(request)
 
             Log.d("Registration", "Получен ответ: ${response.code()}")

@@ -1,9 +1,6 @@
 package com.example.coffeeshop.screens
 
 import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,7 +30,6 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -67,21 +63,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
 import com.example.coffeeshop.R
 import com.example.coffeeshop.history_search.SearchHistoryManager
-import com.example.coffeeshop.network.model.RegisterRequest
+import com.example.coffeeshop.network.model.register.RegisterRequest
 import com.example.coffeeshop.ui.theme.SoraFontFamily
 import com.example.coffeeshop.ui.theme.colorBackgroudWhite
 import com.example.coffeeshop.ui.theme.colorDarkOrange
 import com.example.coffeeshop.ui.theme.colorGrey
 import com.example.coffeeshop.ui.theme.colorGreyWhite
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -486,8 +479,6 @@ fun CoffeeCategoryColumn(viewModel: HomeViewModel = viewModel()) {
     }
 }
 
-
-
 @Composable
 fun LoadingState() {
     Box(
@@ -566,8 +557,6 @@ class HomeViewModel : ViewModel() {
 
 
 }
-
-
 
 @Preview(showBackground = true, showSystemUi = true, name = "pre")
 @Composable

@@ -10,6 +10,7 @@ import com.example.coffeeshop.navigation.NavigationRoutes
 import com.example.coffeeshop.screens.HomeScreen
 import com.example.coffeeshop.screens.OnBoardingScreen
 import com.example.coffeeshop.screens.RegistrationScreen
+import com.example.coffeeshop.screens.SignInScreen
 import com.example.coffeeshop.ui.theme.CoffeeShopTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,6 +32,10 @@ class MainActivity : ComponentActivity() {
                     composable(NavigationRoutes.HOME) {
                         HomeScreen(navController)
                     }
+                    composable(NavigationRoutes.SIGN_IN) {
+                        SignInScreen(navController)
+                    }
+
 
                 }
             }
