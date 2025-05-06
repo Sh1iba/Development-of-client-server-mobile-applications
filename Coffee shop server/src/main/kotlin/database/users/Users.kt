@@ -40,4 +40,23 @@ object Users : Table("users") {
             null
         }
     }
+
+    fun fetchUserByEmail(email: String): UserDTO? {
+        return try {
+            transaction {
+                Users.selectAll().adjustWhere {
+                    Users.email eq email
+                }.singleOrNull()?.let { row ->
+                    UserDTO(
+                        login = row[Users.login],
+                        password = row[Users.password],
+                        username = row[Users.username],
+                        email = row[Users.email]
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
 }

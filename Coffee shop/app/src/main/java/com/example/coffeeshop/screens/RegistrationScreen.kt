@@ -1,8 +1,12 @@
+@file:Suppress("ComposePreviewMustBeTopLevelFunction")
+
 package com.example.coffeeshop.screens
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +38,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -44,9 +49,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.coffeeshop.R
+import com.example.coffeeshop.navigation.NavigationRoutes
 import com.example.coffeeshop.network.repository.RegistrationManager
 import com.example.coffeeshop.ui.theme.colorBackgroudWhite
 import com.example.coffeeshop.ui.theme.colorDarkOrange
@@ -113,7 +120,7 @@ fun RegistrationScreen(navController: NavController) {
 
         Box(
             modifier = Modifier
-                .padding(start = 22.dp, top = 291.dp,end = 22.dp)
+                .padding(start = 22.dp, top = 291.dp, end = 22.dp)
                 .fillMaxWidth()
                 .height(40.dp)
                 .clip(RoundedCornerShape(10.dp))
@@ -143,14 +150,14 @@ fun RegistrationScreen(navController: NavController) {
             lineHeight = 24.sp,
             color = colorFoundationGrey,
             modifier = Modifier
-                .width(48.dp)
+                .fillMaxWidth()
                 .height(24.dp)
                 .offset(x = 24.dp, y = 336.dp)
         )
 
         Box(
             modifier = Modifier
-                .padding(start = 22.dp, top = 360.dp,end = 22.dp)
+                .padding(start = 22.dp, top = 360.dp, end = 22.dp)
                 .fillMaxWidth()
                 .height(40.dp)
                 .clip(RoundedCornerShape(10.dp))
@@ -180,14 +187,14 @@ fun RegistrationScreen(navController: NavController) {
             textAlign = TextAlign.Center,
             color = colorFoundationGrey,
             modifier = Modifier
-                .width(56.dp)
+                .width(62.dp)
                 .height(24.dp)
                 .offset(x = 24.dp, y = 403.dp)
         )
 
         Box(
             modifier = Modifier
-                .padding(start = 22.dp, top = 427.dp,end = 22.dp)
+                .padding(start = 22.dp, top = 427.dp, end = 22.dp)
                 .fillMaxWidth()
                 .height(40.dp)
                 .clip(RoundedCornerShape(10.dp))
@@ -250,6 +257,7 @@ fun RegistrationScreen(navController: NavController) {
         var errorMessage by remember { mutableStateOf<String?>(null) }
         var isLoading by remember { mutableStateOf(false) }
         val context = LocalContext.current
+        var showSuccessDialog by remember { mutableStateOf(false) }
 
         LaunchedEffect(errorMessage) {
             errorMessage?.let { message ->
@@ -273,8 +281,10 @@ fun RegistrationScreen(navController: NavController) {
                         return@Button
                     }
 
+
                     errorMessage = null
                     isLoading = true
+
 
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
@@ -287,12 +297,15 @@ fun RegistrationScreen(navController: NavController) {
                                 when {
                                     result.isSuccess -> {
                                         Log.d("Registration", "Регистрация успешна!")
+                                        showSuccessDialog = true
                                     }
+
                                     else -> {
                                         val error = result.exceptionOrNull()
                                         errorMessage = when {
                                             error?.message?.contains("400") == true -> "Неверная почта"
                                             error?.message?.contains("409") == true -> "Пользователь уже существует"
+                                            error?.message?.contains("423") == true -> "Адрес электронной почты уже зарегистрирован"
                                             error?.message?.contains("500") == true -> "Ошибка сервера"
                                             else -> "Ошибка: ${error?.message ?: "Неизвестная ошибка"}"
                                         }
@@ -327,19 +340,20 @@ fun RegistrationScreen(navController: NavController) {
             }
         }
 
+
         Column(
             modifier = Modifier,
             verticalArrangement = Arrangement.spacedBy(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 710.dp),
-            thickness = 4.dp,
-            color = Color(0xFFF9F2ED)
-        )
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 710.dp),
+                thickness = 4.dp,
+                color = Color(0xFFF9F2ED)
+            )
 
             Text(
                 text = buildAnnotatedString {
@@ -365,8 +379,78 @@ fun RegistrationScreen(navController: NavController) {
                 lineHeight = 19.2.sp,
                 textAlign = TextAlign.Center,
             )
-            }
-    }
+
+
+        }
+        if(showSuccessDialog){
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White.copy(alpha = 1f))
+
+        ) {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center)
+                    .padding(start = 24.dp, end = 24.dp, top = 80.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Image(
+                    painter = painterResource(id = R.drawable.success),
+                    contentDescription = "Success",
+                    modifier = Modifier.size(100.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Поздравляю!",
+                    fontFamily = SoraFontFamily,
+                    fontWeight = FontWeight.W600,
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+
+                Text(
+                    text = "Регистрация прошла успешно.",
+                    fontFamily = SoraFontFamily,
+                    fontWeight = FontWeight.W400,
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    onClick = {
+                        navController.navigate(NavigationRoutes.HOME) {
+                            popUpTo(NavigationRoutes.REGISTRATION) { inclusive = true }
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorDarkOrange
+                    )
+                ) {
+                    Text(
+                        text = "OK",
+                        color = Color.White,
+                        fontFamily = SoraFontFamily,
+                        fontWeight = FontWeight.W600,
+                        fontSize = 16.sp
+                    )
+                }
+            } }
+} }
+
+
 }
 
 @Preview(showBackground = true, showSystemUi = true, name = "pre")
